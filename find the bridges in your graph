@@ -1,29 +1,25 @@
-1.	void Dfs(ll node, ll p , ll x , ll y )
-2.	{
-3.	    vis[node] = true;
-4.	    tin[node] = low[node] = timer++;
-5.	    for (int to : v[node])
-6.	    {
-7.	        if (to == p) continue;
-8.	        if ( to == node )
-9.	            continue ;
-10.	        if ( to == x && node == y )
-11.	            continue ;
-12.	        if ( to == y && node == x )
-13.	            continue ;
-14.	        if (vis[to])
-15.	        {
-16.	            low[node] = min(low[node], tin[to]);
-17.	        }
-18.	        else
-19.	        {
-20.	            Dfs(to, node,x,y);
-21.	            low[node] = min(low[node], low[to]);
-22.	            if (low[to] > tin[node])
-23.	            {
-24.	                if ( times[{to,node}] == 1 )
-25.	                    bridges[{node,to}] = bridges [{to,node}] = 1 ; //it is a map if you will to know if the edge is a bridge check the value of this edge if it is 1
-26.	            }
-27.	        }
-28.	    }
-29.	}
+	void Dfs(ll node, ll p)
+	{
+	    vis[node] = true;
+	    tin[node] = low[node] = timer++;
+	    for (int to : v[node])
+    {
+        if (to == p) continue;
+	        if ( to == node )
+	            continue ;
+	        if (vis[to])
+	        {
+	            low[node] = min(low[node], tin[to]);
+	        }
+	        else
+	        {
+	            Dfs(to, node);
+	            low[node] = min(low[node], low[to]);
+	            if (low[to] > tin[node])
+	            {
+	                if ( times[{to,node}] == 1 )
+	                    bridges[{node,to}] = bridges [{to,node}] = 1 ;
+	            }
+	        }
+	    }
+	}
