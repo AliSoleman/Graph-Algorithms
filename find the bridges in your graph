@@ -22,7 +22,7 @@
 22.	            if (low[to] > tin[node])
 23.	            {
 24.	                if ( times[{to,node}] == 1 )
-25.	                    bridges[{node,to}] = bridges [{to,node}] = 1 ;
+25.	                    bridges[{node,to}] = bridges [{to,node}] = 1 ; //it is a map if you will to know if the edge is a bridge check the value of this edge if it is 1
 26.	            }
 27.	        }
 28.	    }
