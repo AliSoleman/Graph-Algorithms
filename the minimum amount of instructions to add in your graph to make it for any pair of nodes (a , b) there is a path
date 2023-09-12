@@ -1,0 +1,157 @@
+#include<bits/stdc++.h>
+#pragma GCC target("popcnt")
+#define pb push_back
+#define endl '\n'
+#define F first
+#define S second
+#define forq(i,a,b) for(int i = a ; i <= b ; i++ )
+#define qrof(i,a,b) for(int i = b ; i >= a ; i--)
+#define Fast ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+#define sc(x) scanf("%lld",&x)
+#define Ok(x) x == true ?cout<<"YES"<<endl : cout<<"NO"<<endl;
+using namespace std;
+typedef long long ll;
+const int N = 2e5+10;
+const int M = 1e9+7;
+int rootN ;
+const int LOG = 22;
+const ll INF = 1e18;
+///////////////////////////////////////////////////////////////////
+int  vis[N] , arr[N] , in[N] , out[N] , root[N];
+vector<int> adj[N] , adj_rev[N] , new_adj[N] , v , comp;
+void dfs(int node, vector<int> adj[])
+{
+    if (vis[node]) return;
+    vis[node] = 1;
+    for (auto i: adj[node])
+        dfs(i, adj);
+    v.push_back(node);
+}
+void dfs2( int node )
+{
+    vis[node] = 1;
+    comp.push_back(node);
+    for (auto i: adj_rev[node])
+    {
+        if(vis[i] == 0)
+        dfs2(i);
+    }
+}
+deque<int>s,source;
+void dfs3( int node )
+{
+    vis[node] = 1;
+    if( out [ node ] == 0 && arr[node] )
+    {
+        s.push_back(node);
+    }
+    if( in[node] == 0 && arr[node] )
+    {
+        source.push_back(node);
+    }
+    for( int child : new_adj[node] )
+    {
+        if(!vis[child])
+        {
+            dfs3(child);
+        }
+    }
+}
+void Solve()
+{
+    int n;
+    cin >> n  ;
+    for( int a = 1 ; a <= n ; a++ )
+    {
+        int  b;
+        cin >> b;
+        adj[a].push_back(b);
+        adj_rev[b].push_back(a);
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        if (!vis[i])
+            dfs(i, adj);
+    }
+    memset(vis,0,sizeof vis);
+    reverse(v.begin(), v.end());
+    for (auto i: v)
+    {
+        if (vis[i] == 0)
+        {
+            dfs2(i);
+            int r = comp.front();
+            if( comp.size() == n )
+            {
+                cout<<0<<endl;
+                return;
+            }
+            arr[r]=1;
+            for(auto ele:comp)
+                root[ele]=r;
+            comp.clear();
+        }
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        for ( auto it: adj[i] )
+        {
+            int x=root[i];
+            int y=root[it];
+            if(x != y)
+            {
+                new_adj[x].pb(y);
+                in[y]++;
+                out[x]++;
+            }
+        }
+    }
+    memset(vis, 0, sizeof vis);
+    vector< pair<int,int> >ans;
+    for( int i = 1 ; i <= n ; i++ )
+    {
+        if(in[i] == 0 && arr[i]){
+                dfs3(i);
+        }
+    }
+    if( source.size() >= s.size() && s.size() )
+    {
+        int j = 1 , mo = s.size();
+        j %= mo;
+        for( int i = 0 ; i <source.size() ; i++ )
+        {
+            ans.push_back( { s[j], source[i] } );
+            j++;
+            j%=mo;
+        }
+    }
+    else if( source.size() )
+    {
+         int j = 1 , mo = source.size();
+         j %= mo;
+        for( int i = 0 ; i <s.size() ; i++ )
+        {
+            ans.push_back( { s[i] , source[j] } );
+            j++;
+            j%=mo;
+        }
+    }
+    cout<<ans.size()<<endl;
+    for( pair<int,int>ele : ans )
+    {
+        cout << ele.first << ' ' << ele.second << endl;
+    }
+}
+int main()
+{
+    Fast;
+    int Test = 1 ;
+    //cin >> Test;
+Start:
+    for(int test = 1 ; test <= Test ; test++ )
+    {
+        Solve() // ? puts("YES") : puts("NO")
+        ;
+    }
+    return 0 ;
+}
